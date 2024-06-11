@@ -46,11 +46,22 @@ Plot the `#FP = f(Recall)` curve for each camera for which we have alerts in thi
 
 It is assumed that no theft is missing from the CSV, meaning that for every theft, an alert has been generated. The graphs must be saved as separate images (one for each camera).
 
+#### Answer
+Plots have been saved in results folder.
+
 ### Question 2 : analysis
 
 What can you deduce about the model's uniformness across these cameras?
 
 Justify your answer.
+
+#### Answer
+By looking at the ROC curves wecan observe the ability of the classifier to detect alerts. Especially looking at the boxplot summarizing the distribution of AUC values, knowing that 0.5 would mean a random classifier, below represents a classifier that does worse than random classification, above means a better classifier. In the case here, we notice first that the classifier has heterogeneous performance depending on the camera. The mean AUC being 0.59 and a standard deviation close to 0.14. We see very good performance for camera fr-vieclaire-38530-port-98_61 (AUC at 0.89) but bad performance for camera fr-mr-brico-54300-ader-6_19 (AUC lower than 0.1). 
+
+<p align="center">
+  <img alt="Boxplot of AUC for cameras with alert" title="Boxplot of AUC for cameras with alert" src="./results/boxplot_auc.png" >
+</p>
+
 
 ### Question 3 : optimisation
 
@@ -64,6 +75,11 @@ Find a combination of thresholds for all the cameras that, given a target reduct
 The following steps can be followed: 
 - Propose a “greedy” approach, even if it's too heavy to run on a machine. 
 - Propose a more intelligent approach, via optimization.
+
+#### Answer
+A greedy approach would be to start at threshold equal to 0 for all cameras and get the total number of TP and total number of FP. By choosing a certain step size, we could create a vector of threshold values from 0 to 1. Using this vector, we could perform a grid search, trying all values for each camera and looking at the resutling total numbers of FP and TP. With X the total number of cameras, this approach leads to a set of combinations (threshold_cam1, threshold_cam2..., threshold_camX, total_number_TP, total_number_FP). 
+For instance, if we had a step of 0.05, the thresholds vector would be (0,0.05...,0.9,0.95,1), and we would get X^20 combinations. Once we get these combinations, we can focus on the set of combinations, where the total number of FP respects the target reduction. On this subset of combinations we can finally look for the one with the minimal total number of TP reduction.
+
 
 ### Question 4 : deployment
 
